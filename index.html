@@ -87,9 +87,12 @@
       volumeList.replaceChildren();
       const volumeSeriesName = manga.title.replace(/\n/g, ' ').split('(')[0].trim();
       manga.covers.forEach((cover, volumeIndex) => {
+        const coverPath = typeof cover === 'string' ? cover : cover.image;
+        const fileVolume = coverPath.match(/_vol_(\d+)/i);
+        const volumeNumber = typeof cover === 'object' ? cover.number : (fileVolume ? Number(fileVolume[1]) : volumeIndex + 1);
         const volume = document.createElement('article');
         volume.className = 'volume-card';
-        volume.innerHTML = `<span class="volume-number">VOLUME ${String(volumeIndex + 1).padStart(2, '0')}</span><img src="${cover}" alt="ปก ${volumeSeriesName} เล่ม ${volumeIndex + 1}"><div class="volume-info"><span>${volumeSeriesName}</span><h3>เล่มที่ ${volumeIndex + 1}</h3><p>จัดเก็บในคลังมังงะ</p></div>`;
+        volume.innerHTML = `<span class="volume-number">VOLUME ${String(volumeNumber).padStart(2, '0')}</span><img src="${coverPath}" alt="ปก ${volumeSeriesName} เล่ม ${volumeNumber}"><div class="volume-info"><span>${volumeSeriesName}</span><h3>เล่มที่ ${volumeNumber}</h3><p>จัดเก็บในคลังมังงะ</p></div>`;
         volumeList.appendChild(volume);
       });
       collectionView.hidden = true;
