@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warakorn's Sound Vault</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg class="grain" width="0" height="0">
+  <filter id="noiseFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+</svg>
+<svg class="grain"><rect width="100%" height="100%" filter="url(#noiseFilter)"/></svg>
+<div class="haze"></div>
+
+<header>
+  <img class="header-gif" src="images/gif/blood_driping.gif" alt="">
+  <div class="brand"><span class="dot"></span>WARAKORN'S SOUND VAULT</div>
+  <div class="tally" id="headerTally">6 ศิลปิน · 21 อัลบั้ม</div>
+</header>
+
+<main>
+
+  <section class="view active" id="shelfView">
+    <div class="hero">
+      <div class="eyebrow">Personal collection · after hours</div>
+      <h1 class="title">เสียงเพลงที่ไหลไปตามเส้นเลือด<em>Music runs through my veins.</em></h1>
+      <div class="hero-row">
+        <p class="hero-desc">คอลเลกชันอัลบั้มเสียงที่หลงใหล เลือกศิลปินที่ชื่นชอบ เพื่อดูจำนวนอัลบั้มที่เก็บสะสมไว้ในคลังลับ</p>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>The Midnight Collection</h2>
+      <span id="listCount">เลือกศิลปินเพื่อดูรายละเอียด</span>
+    </div>
+
+    <div id="artistList"></div>
+  </section>
+
+  <section class="view" id="detailView">
+    <button class="back" onclick="showShelf()">← กลับสู่คลังทั้งหมด</button>
+    <div class="detail-hero">
+      <div class="detail-eyebrow" id="detailEyebrow">Artist 01</div>
+      <h1 class="detail-title" id="detailTitle"></h1>
+      <p class="detail-desc" id="detailDesc"></p>
+    </div>
+
+    <div class="vol-head">
+      <h3>Albums in the archive</h3>
+      <span id="detailCount"></span>
+    </div>
+
+    <div class="albums" id="albumList"></div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <img class="footer-gif" src="images/gif/un_partido_y_una_pintura_[Bychance]_footer.gif" alt="">
+</footer>
+
+<script>
+const artists = [
+  {
+    id:'weeknd',
+    name:'The Weeknd',
+    thai:'เดอะ วีคเอนด์',
+    desc:'เสียงฟอลเซตโตเหนือซินธ์มืดหม่น เรื่องเล่าของราตรีในเมืองที่ไม่เคยหลับ นักร้องขวัญใจแห่งย่านสกาโบโรห์ที่เปลี่ยนโฉมหน้าอาร์แอนด์บียุคใหม่',
+    albums:[
+      {title:'House of Balloons',slug:'house-of-balloons',year:'2011 · Mixtape',note:'จุดเริ่มต้นของทุกอย่าง',tracks:9,tracknames:['High for This','What You Need','House of Balloons / Glass Table Girls','The Morning','Wicked Games','The Party & the After Party','Coming Down','Loft Music','The Knowing'],spotify:'https://open.spotify.com/album/7zCODUHkfuRxsUjtuzNqbd?si=pJ4RjWPKQEmz2q3orHRhYA'},
+      {title:'Thursday',slug:'thursday',year:'2011 · Studio Album',tracks:9, tracknames:['Lonely Star','Life of the Party','Thursday','The Zone (feat. Drake)','The Birds Pt. 1','The Birds Pt. 2','Gone','Rolling Stone','Heaven or Las Vegas'],spotify:'https://open.spotify.com/album/6F87lH0I09qlrzvCCKc7lz?si=kmkVPTmcTXyNEoGAyP1MjQ'},
+      {title:'Beauty Behind the Madness',slug:'beauty-behind-the-madness',year:'2015 · Studio Album',tracks:14, tracknames:['Real Life','Losers (feat. Labrinth)','Tell Your Friends','Often','The Hills','Acquainted','Can’t Feel My Face','Shameless','Earned It (Fifty Shades of Grey)','In the Night','As You Are','Dark Times (feat. Ed Sheeran)','Prisoner (feat. Lana Del Rey)','Angel'],spotify:'https://open.spotify.com/album/0P3oVJBFOv3TDXlYRhGL7s?si=6aIq8prISe2RHkaSj8zhbw'},
+      {title:'Echoes Of Silence',slug:'echoes-of-silence',year:'2011 · Studio Album',tracks:9,tracknames:['D.D.','Montreal','Outside','XO / The Host','Initiation','Same Old Song (feat. Juicy J)','The Fall','Next','Echoes of Silence'],spotify:'https://open.spotify.com/album/04hy4jb1GDD00otiwzsFUB?si=2DUHxgqnRcqRlmGYwJgpCg'},
+      {title:'Kiss Land (Deluxe)',slug:'kiss-land',year:'2013 · Studio Album',note:'ฟังทีไรก็เหมือนย้อนเวลา',tracks:12,tracknames:['Professional','The Town','Adaptation','Love In The Sky','Belong To The World','Live For (feat. Drake)','Wanderlust','Kiss Land','Pretty','Tears In The Rain','Wanderlust (Pharrell Remix)','Odd Look (feat. The Weeknd) - Kavinsky'],spotify:'https://open.spotify.com/album/6wRev1uYL0JsMsWqktJuVi?si=l9fAYurBQ8aww4uQklYqMA'},
+
+    ]
+  },
+  {
+    id:'frank',
+    name:'Frank Ocean',
+    thai:'แฟรงก์ โอเชียน',
+    desc:'บทกวีอาร์แอนด์บีที่ลื่นไหลข้ามแนวเพลง เสียงเปราะบางที่เล่าเรื่องความรักและความทรงจำอย่างตรงไปตรงมา',
+    albums:[
+      {title:'channel ORANGE',slug:'channel-orange',year:'2012 · Studio Album',tracks:17,tracknames:['Start','Thinkin Bout You','Fertilizer','Sierra Leone','Sweet Life','Not Just Money','Super Rich Kids (feat. Earl Sweatshirt)','Pilot Jones','Crack Rock','Pyramids','Lost','White (feat. John Mayer)','Monks','Bad Religion','Pink Matter (feat. André 3000)','Forrest Gump','End'],spotify:'https://open.spotify.com/album/392p3shh2jkxUxY2VHvlH8?si=xFaZ2pxwS96qPkLlBV9Z3g'},
+      {title:'Blonde',slug:'blonde',year:'2016 · Studio Album',note:'ฟังทีไรก็เหมือนย้อนเวลา',tracks:17,tracknames:['Nikes','Ivy','Pink + White','Be Yourself','Solo','Skyline To','Self Control','Good Guy','Nights','Solo (Reprise)','Pretty Sweet','Facebook Story','Close to You','White Ferrari','Seigfried','Godspeed','Futura Free'],spotify:'https://open.spotify.com/album/3mH6qwIy9crq0I9YQbOuDf?si=TiLUwKhpSDekBBkDzsSNXg'},
+    ]
+  },
+  {
+    id:'maneskin',
+    name:'Maneskin',
+    thai:'มาเนสคิน',
+    desc:'ร็อกสัญชาติอิตาลีที่พาเพลงร็อกกลับมาครองเวทีโลกอีกครั้ง ด้วยพลังดิบและความมั่นใจของวัยรุ่นยุคใหม่',
+    albums:[
+      {title:'Il ballo della vita',slug:'il-ballo-della-vita',year:'2018 · Studio Album',tracks:12,tracknames:['New Song','Torna a casa',"L'altra dimensione",'Sh*t Blvd','Fear for Nobody','Le parole lontane','Immortale (feat. Vegas Jones)','Lasciami stare','Are You Ready?','Close to the Top','Niente da dire','Morirò da re'],spotify:'https://open.spotify.com/album/44a7Wk3Jh2JGVhjcFYWozj?si=iBX-gAQzRpqosrM5gtcJsQ'},
+      {title:'Teatro d"Ira - Vol. I',slug:'teatro-d-ira',year:'2021 · Studio Album',tracks:8,tracknames:['Zitti e buoni','Coraline','LIVIDI SUI GOMITI','I WANNA BE YOUR SLAVE','IN NOME DEL PADRE','FOR YOUR LOVE','Lividi sui gomiti',"VENT'ANNI"],spotify:'https://open.spotify.com/album/7KF1Ain9mYYlg5M46g0i4A?si=TIbywqEpTR6Hs3KN9sdr6w'},
+      {title:'RUSH! (ARE U COMING?)',slug:'rush',year:'2023 · Studio Album',tracks:17,tracknames:['Own My Mind','Gossip (feat. Tom Morello)','Timezone','Bla Bla Bla','Baby Said','Gasoline','Feel',"Don't Wanna Sleep",'Kool Kids','If Not for You','Read Your Diary','Mark Chapman','La Fine','Il Dono Della Vita','Mammamia','Supermodel','The Loneliest'],spotify:'https://open.spotify.com/album/2kcJ3TxBhSwmki0QWFXUz8?si=4lncbZveQ4G78PkDo8sW9Q'},
+    ]
+  },
+  {
+    id:'playboi',
+    name:'Playboi Carti',
+    thai:'เพลย์บอย คาร์ติ',
+    desc:'แร็ปเปอร์ที่สร้างปรากฏการณ์ด้วยสไตล์เสียงที่เป็นเอกลักษณ์ การใช้เสียงออโต้จูนและจังหวะที่ติดหู ทำให้เพลงของเขาเป็นที่นิยมในหมู่แฟนเพลงฮิปฮอป',
+    albums:[
+      {title:'Playboi Carti',slug:'playboi-carti',year:'2017 · Studio Album',note:'แผ่นที่ต้องฟังรวดเดียวจบ',tracks:15,tracknames:['Location','Magnolia','Lookin (feat. Lil Uzi Vert)','wokeuplikethis* (feat. Lil Uzi Vert)','Let It Go','Half & Half','New Choppa (feat. A$AP Rocky)','Other Shit','NO. 9','dothatshit','Lame Niggaz','Yah Mean','Flex','Kelly K','Had 2'],spotify:'https://open.spotify.com/album/4rJgzzfFHAVFhCSt2P4I3j?si=Inm2p536TcuQnvWSGD19_Q'},
+      {title:'Die Lit',slug:'die-lit',year:'2018 · Studio Album',tracks:19,tracknames:['Long Time (Intro)','R.I.P.','Lil Uzi Vert','Lean 4 Real','Old Money','Love Hurts','Shoota','Right Now','Poke It Out','Home (KOD)','Fell in Luv','Foreign','Pull Up','Mileage','FlatBed Freestyle','No Time'],spotify:'https://open.spotify.com/album/7dAm8ShwJLFm9SaJ6Yc58O?si=9CpP9gngQ02J1FknY5id1w'},
+      {title:'Whole Lotta Red',slug:'whole-lotta-red',year:'2020 · Studio Album',tracks:24, tracknames:['Rockstar Made','Go2DaMoon','Stop Breathing','Beno!','JumpOutTheHouse','M3tamorphosis','Slay3r','No Sl33p','New Tank','Teen X','Meh','Vamp Anthem','New N3on','Control','Punk Monk','On That Time','King Vamp','Place','Sky','Over','ILoveUIHateU','Die4Guy','Not PLaying','F33l Lik3 Dyin'],spotify:'https://open.spotify.com/album/2QRedhP5RmKJiJ1i8VgDGR?si=czprN7bIS4OlZG1_bIA66A'}
+    ]
+  },
+  {
+    id:'xxxtentacion',
+    name:'XXXTentacion',
+    thai:'เอกซ์เอกซ์ทีแนตชัน',
+    desc:'แร็ปเปอร์ผู้สร้างความเปลี่ยนแปลงในวงการเพลงด้วยสไตล์ที่หลากหลาย ทั้งฮิปฮอป อาร์แอนด์บี และร็อก เสียงร้องที่เต็มไปด้วยอารมณ์และความจริงใจ ทำให้เขาเป็นที่จดจำแม้หลังจากการจากไป',
+    albums:[
+      {title:'17',slug:'seven-teen',year:'2017 · Studio Album',tracks:11,tracknames: ['The Explanation', 'Jocelyn Flores', 'Depression & Obsession', 'Everybody Dies In Their Nightmares', 'Revenge', 'Save Me', 'Dead Inside (Interlude)', 'Fuck Love', 'Carry On', 'Orlando', 'Ayala (Outro)'],spotify:'https://open.spotify.com/album/5VdyJkLe3yvOs0l4xXbWp0?si=BQ-warYVSfyWLLLj4qQeqA'},
+      {title:'?',slug:'question-mark',year:'2018 · Studio Album',note:'Sad',tracks:18, tracknames:['Introduction (instructions)', 'ALONE, PART 3', 'Moonlight', 'SAD!', 'the remedy for a broken heart (why am I so in love)', 'Floor 555', 'NUMB', 'infinity (888)', 'going down!', 'Pain = BESTFRIEND', '$$$', 'love yourself (interlude)', 'SMASH!', "I don't even speak spanish lol", 'changes', 'Hope', 'schizophrenia', 'before I close my eyes'],spotify:'https://open.spotify.com/album/2Ti79nwTsont5ZHfdxIzAm?si=f41k0OmiRFej6kv7rEptqw'},
+      {title:'Bad Vibes Forever',slug:'bad-vibes-forever',year:'2019 · Studio Album',tracks:25 ,tracknames: ['Introduction', 'Ex Bitch', 'UGLY', 'bad vibes forever', 'School Shooters', 'I Changed Her Life', 'Triumph', 'LIMBO', 'before i realize', 'Ecstasy', 'Kill My Vibe', 'Hot Gyal', 'THE ONLY TIME I FEEL ALIVE', 'the interlude that never ends', 'Daemons', 'Attention!', 'Eat It Up', 'Voss', 'Royalty', "wanna grow old (i won't let go)", 'HEARTEATER', 'NorthStar Remix', 'CHASE / glass shards', 'numb the pain', "IT'S ALL FADING TO BLACK"],spotify:'https://open.spotify.com/album/3hn46RDrEmoi4XhLjgdNjZ?si=ZK8IzdIwTG6wi9bWe8YEQA'},
+    ]
+  },
+  {
+    id:'ken',
+    name:'Ken Carson',
+    thai:'เคน คาร์สัน',
+    desc:'แร็ปเปอร์รุ่นใหม่ที่นำเสนอเสียงเพลงที่สดใสและจังหวะที่ติดหู ด้วยสไตล์ที่เป็นเอกลักษณ์และการใช้เทคนิคการร้องที่หลากหลาย ทำให้เขาเป็นหนึ่งในศิลปินที่น่าจับตามองในวงการฮิปฮอปยุคใหม่',
+    albums:[
+      {title:'A Great Chaos (Deluxe)',slug:'a-great-chaos-deluxe',year:'2023 · Studio Album',tracks:25, tracknames: ['Green Room', 'Jennifer’s Body', 'Fighting My Demons', 'Singapore', 'Lose It', 'Hardcore', 'Me N My Kup', "It's Over", 'Succubus', 'Paranoid', 'Pots', 'Like This', 'Overtime', 'Vampire Hour', 'Nightcore', 'Nightcore 2', 'Rockstar Lifestyle', 'I Need U', 'Loading', 'More Chaos', 'Overseas', 'Toxic', 'Leather Jacket', 'Freestyle 2','ss','mewtwo'],spotify:'https://open.spotify.com/album/58iEeJbYd6OBGRM0TiwltL?si=DznHUB2QT_KzsYqFxtkbQA'},
+    ]
+  }
+];
+
+const artistList = document.getElementById('artistList');
+const totalAlbums = artists.reduce((sum,a)=>sum+a.albums.length,0);
+document.getElementById('headerTally').textContent = artists.length + ' ศิลปิน · ' + totalAlbums + ' อัลบั้ม';
+
+artists.forEach((a,i)=>{
+  const row = document.createElement('div');
+  row.className='row';
+  row.onclick = ()=>showDetail(a.id);
+  row.innerHTML = `
+    <div class="row-num">${String(i+1).padStart(2,'0')}</div>
+    <img class="cover" src="images/artists/${a.id}.jpg" alt="${a.name}" onerror="this.classList.add('cover-fallback')">
+    <div class="row-main">
+      <div class="row-title">${a.name}</div>
+      <div class="row-sub">${a.thai}</div>
+    </div>
+    <div class="row-meta">
+      <div class="row-count">${a.albums.length} อัลบั้มในคลัง</div>
+      <div class="arrow">→</div>
+    </div>
+  `;
+  artistList.appendChild(row);
+});
+
+function showShelf(){
+  document.getElementById('shelfView').classList.add('active');
+  document.getElementById('detailView').classList.remove('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showDetail(id){
+  const a = artists.find(x=>x.id===id);
+  const idx = artists.indexOf(a);
+  document.getElementById('detailEyebrow').textContent = 'Artist ' + String(idx+1).padStart(2,'0');
+  document.getElementById('detailTitle').textContent = a.name + ' (' + a.thai + ')';
+  document.getElementById('detailDesc').textContent = a.desc;
+  document.getElementById('detailCount').textContent = a.albums.length + ' อัลบั้มในคอลเลกชัน';
+
+  const list = document.getElementById('albumList');
+  list.innerHTML='';
+  a.albums.forEach((al,i)=>{
+    const trackItems = Array.from({length: al.tracks}, (_,t)=>
+      `<li><span class="tr-num">${String(t+1).padStart(2,'0')}</span><span class="tr-name">${al.tracknames && al.tracknames[t] ? al.tracknames[t] : 'เพลงที่ ' + (t+1)}</span></li>`
+    ).join('');
+
+    const el = document.createElement('div');
+    el.className='album';
+    el.innerHTML = `
+      <div class="album-cover">
+        <img src="images/covers/${a.id}-${al.slug}.jpg" alt="${al.title} cover" onerror="this.style.display='none'; this.parentElement.classList.add('cover-fallback')">
+      </div>
+      <div class="album-body">
+        <div class="album-tag">Volume ${String(i+1).padStart(2,'0')}</div>
+        <div class="album-title">${al.title}</div>
+        <div class="album-year">${al.year}</div>
+        ${al.note ? `<div class="album-note">${al.note}</div>` : ''}
+        <ol class="tracklist">${trackItems}</ol>
+        <a class="play-btn" href="${al.spotify || 'https://open.spotify.com/search/' + encodeURIComponent(a.name + ' ' + al.title)}" target="_blank" rel="noopener">
+          <span class="play-icon">▶</span> ฟังอัลบั้มนี้ · Spotify
+        </a>
+      </div>
+    `;
+    list.appendChild(el);
+  });
+
+  document.getElementById('shelfView').classList.remove('active');
+  document.getElementById('detailView').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+
+</body>
+</html>
