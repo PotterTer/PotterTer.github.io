@@ -67,8 +67,8 @@ body{
 }
 @keyframes pulse{ 0%,100%{opacity:.55; transform:scale(1);} 50%{opacity:1; transform:scale(1.08);} }
 .avatar{
-    width:120px;
-    height:120px;
+    width:140px;
+    height:140px;
     border-radius:50%;
     overflow:hidden;
     border:1px solid #29ff03;
