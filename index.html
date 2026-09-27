@@ -26,7 +26,7 @@
     <div class="frame">
       <div class="glow"></div>
       <div class="avatar">
-        <img src="images/profile/marie.jpg" alt="Profile">
+        <img id="profile-img" src="" alt="Profile">
       </div>
     </div>
 
@@ -130,6 +130,21 @@
       animating = false;
     }, 950);
   }
+  
+  // Random profile image
+  const profiles = [
+    "images/profile/marie.jpg",
+    "images/profile/potter.jpg",
+    "images/profile/potter_2.jpg",
+    "images/profile/images/profile/IMG_20260812_205629_354.jpg.jpg",
+    "images/profile/images/profile/IMG_20260925_142055_082.png.jpg",
+    "images/profile/images/profile/images/profile/Messenger_creation_393CF8E0-320B-4A08-B5B0-990A29410639.png",
+  ];
+  
+  const randomProfile =
+    profiles[Math.floor(Math.random() * profiles.length)];
+  
+  document.getElementById("profile-img").src = randomProfile;
 </script>
 
 </body>
